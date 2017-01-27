@@ -1,0 +1,21 @@
+@font-face{
+  font-family: "PressStart";
+  src: url("../fonts/PressStart2P.ttf");
+}
+
+body{
+  background-color: #655656;
+}
+
+h1,
+h2{
+  color: #ffffff;
+}
+
+#canvas {
+  background-color: #333;
+}
+#currentScore{
+  font-family: "PressStart";
+  color: #ffffff;
+}

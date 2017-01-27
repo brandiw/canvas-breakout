@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas Breakout</title>
+  <!-- Latest compiled and minified CSS & JS -->
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="./css/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div style="font-family: PressStart"> </div>
+    <h1 class="text-center">Canvas Breakout!</h1>
+    <hr>
+    <div id="playArea">
+      <div class="text-center">
+        <canvas id="canvas" width="700" height="475"></canvas>
+      </div>
+      <div id="currentScore" class="hidden">
+        <div>
+          <h3 class="text-center">Score: <span id="currentScoreDisplay">0</span></h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="//code.jquery.com/jquery.js"></script>
+  <script src="./js/constants.js"></script>
+  <script src="./js/draw.js"></script>
+  <script src="./js/collisions.js"></script>
+  <script src="./js/scores.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>
