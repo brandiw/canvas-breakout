@@ -18,21 +18,6 @@ function clearCanvas(canvas){
 }
 
 // INITIAL STATE
-function fadeOut(canvas, text, x, y) {
-    var alpha = 1.0;   // full opacity
-    var textInterval = setInterval(function () {
-      clearCanvas(canvas);
-      canvas.fillStyle = "rgba(255, 255, 255, " + alpha + ")";
-      canvas.font = "24px 'PressStart'";
-      canvas.fillText(text, x, y);
-      alpha = alpha - 0.06;
-      if (alpha < 0) {
-        clearInterval(textInterval);
-        drawScreen(canvas, "#fff");
-      }
-    }, 60);
-}
-
 function drawScreen(canvas, color){
   if(state == 'initial'){
     clearCanvas(canvas);

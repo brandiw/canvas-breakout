@@ -20,7 +20,7 @@ function updateGameState(){
     case 'initial':
       $('#currentScore').addClass('hidden');
       setInitialState();
-      flashWelcome();
+      flashWelcome("Welcome Player One", 140, 250);
       break;
     case 'game':
       clearInterval(effectInterval);
@@ -52,17 +52,30 @@ function setInitialState(){
   keys = {left: false, right: false};
 }
 
-function flashWelcome(){
-  fadeOut(canvas, "Welcome Player One", 140, 250);
-  setTimeout(function(){
-    effectInterval = setInterval(function(){
-      var red = Math.floor(Math.random() * 255);
-      var green = Math.floor(Math.random() * 255);
-      var blue = Math.floor(Math.random() * 255);
-      var color ="rgba(" + red + ", " + green + ", " + blue + ", 100)";
-      drawScreen(canvas, color);
-    }, 1500);
-  }, 3000);
+function alternateColors(){
+  effectInterval = setInterval(function(){
+    var red = Math.floor(Math.random() * 255);
+    var green = Math.floor(Math.random() * 255);
+    var blue = Math.floor(Math.random() * 255);
+    var color ="rgba(" + red + ", " + green + ", " + blue + ", 100)";
+    drawScreen(canvas, color);
+  }, 1500);
+}
+
+function flashWelcome(text, x, y) {
+  var alpha = 1.0;   // full opacity
+  var textInterval = setInterval(function () {
+    clearCanvas(canvas);
+    canvas.fillStyle = "rgba(255, 255, 255, " + alpha + ")";
+    canvas.font = "24px 'PressStart'";
+    canvas.fillText(text, x, y);
+    alpha = alpha - 0.06;
+    if (alpha < 0) {
+      clearInterval(textInterval);
+      drawScreen(canvas, "#fff");
+      alternateColors();
+    }
+  }, 60);
 }
 
 function initGame(){
