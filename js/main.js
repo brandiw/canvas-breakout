@@ -1,13 +1,3 @@
-// GLOBAL VARS
-var canvas = null;
-var state = 'initial';
-var score = 0;
-var ballspeed;
-var gameInterval, effectInterval;
-var bricks = [];
-var keys;
-var locations;
-
 // DOCUMENT READY
 $(document).ready(function(){
   canvas = $('#canvas')[0].getContext("2d");
@@ -29,10 +19,10 @@ function updateGameState(){
       gameInterval = setInterval(gameLoop, GAME_LOOP);
       break;
     case 'scores':
-      displayHighScores(canvas);
+      displayHighScores();
       break;
     case 'rules':
-      displayRules(canvas);
+      displayRules();
       break;
     case 'paused':
       $('#currentScore').removeClass('hidden');
@@ -40,7 +30,7 @@ function updateGameState(){
       break;
     case 'gameover':
       this.state = 'scores';
-      gameOver(score, canvas);
+      gameOver();
       break;
   }
 }
@@ -58,21 +48,21 @@ function alternateColors(){
     var green = Math.floor(Math.random() * 255);
     var blue = Math.floor(Math.random() * 255);
     var color ="rgba(" + red + ", " + green + ", " + blue + ", 100)";
-    drawScreen(canvas, color);
+    drawScreen(color);
   }, 1500);
 }
 
 function flashWelcome(text, x, y) {
   var alpha = 1.0;   // full opacity
   var textInterval = setInterval(function () {
-    clearCanvas(canvas);
+    clearCanvas();
     canvas.fillStyle = "rgba(255, 255, 255, " + alpha + ")";
     canvas.font = "24px 'PressStart'";
     canvas.fillText(text, x, y);
     alpha = alpha - 0.06;
     if (alpha < 0) {
       clearInterval(textInterval);
-      drawScreen(canvas, "#fff");
+      drawScreen("#fff");
       alternateColors();
     }
   }, 60);
@@ -80,7 +70,7 @@ function flashWelcome(text, x, y) {
 
 function initGame(){
   initBricks();
-  drawPlayer(canvas, locations.ball, locations.bumper);
+  drawPlayer(locations.ball, locations.bumper);
 }
 
 function initBricks(){
@@ -193,7 +183,7 @@ function gameLoop(){
   }
 
   //Detect Fell Off Screen
-  if(locations.ball.y > CANVAS_HEIGHT || noBricksAlive(bricks)){
+  if(locations.ball.y > CANVAS_HEIGHT || noBricksAlive()){
     state = 'gameover';
     clearInterval(gameInterval);
     updateGameState();
@@ -203,16 +193,16 @@ function gameLoop(){
   for(var i = 0; i < bricks.length; i++){
     for(var j = 0; j < bricks[i].length; j++){
       if(hasOverlap(bricks[i][j], locations.ball)){
-        score = collideBrick(bricks, i, j, ballspeed, score);
+        score = collideBrick(i, j, ballspeed, score);
         break;
       }
     }
   }
 
   //wipe and redraw stuff
-  clearCanvas(canvas);
-  drawPlayer(canvas, locations.ball, locations.bumper);
+  clearCanvas();
+  drawPlayer(locations.ball, locations.bumper);
 
   //Redraw bricks
-  reDrawBricks(canvas, bricks);
+  reDrawBricks();
 }

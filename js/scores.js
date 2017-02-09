@@ -1,4 +1,4 @@
-function gameOver(score, canvas){
+function gameOver(){
   var scores = getHighScores();
 
   if(scores.length < SCORE_SLOTS || scores[SCORE_SLOTS - 1].score < score){
@@ -73,10 +73,10 @@ function addNewScore(name, score, allScores){
   localStorage.breakoutScores = JSON.stringify(allScores);
 }
 
-function displayHighScores(canvas){
+function displayHighScores(){
   $('#currentScore').addClass('hidden');
   var scores = getHighScores();
-  clearCanvas(canvas);
+  clearCanvas();
   canvas.font = '24px PressStart';
   canvas.fillStyle = '#fff';
   canvas.fillText("HIGH SCORES", 165, 75);

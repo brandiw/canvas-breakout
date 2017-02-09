@@ -16,7 +16,7 @@ function hasOverlap(brick, ball){
 }
 
 // COLLISION RESULT
-function collideBrick(bricks, i, j, ballspeed, score){
+function collideBrick(i, j, ballspeed, score){
   bricks[i][j].state = "destroyed";
   ballspeed.y = -ballspeed.y;
   score += 100;
@@ -25,7 +25,7 @@ function collideBrick(bricks, i, j, ballspeed, score){
 }
 
 // CHECK ALIVE STATE
-function noBricksAlive(bricks){
+function noBricksAlive(){
   for(var i = 0; i < BRICK_ROWS; i++){
     for(var j = 0; j < BRICK_COLUMNS; j++){
       if(bricks[i][j].state == "alive"){

@@ -1,26 +1,26 @@
 // GENERAL CANVAS HELPERS
-function drawRectangle(canvas, x, y, width, height){
+function drawRectangle(x, y, width, height){
   canvas.beginPath();
   canvas.rect(x, y, width, height);
   canvas.closePath();
   canvas.fill();
 }
 
-function drawCircle(canvas, x, y, radius){
+function drawCircle(x, y, radius){
   canvas.beginPath();
   canvas.arc(x, y, radius, 0, Math.PI * 2, true);
   canvas.closePath();
   canvas.fill();
 }
 
-function clearCanvas(canvas){
+function clearCanvas(){
   canvas.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
 // INITIAL STATE
-function drawScreen(canvas, color){
+function drawScreen(color){
   if(state == 'initial'){
-    clearCanvas(canvas);
+    clearCanvas();
     canvas.font = '24px PressStart';
     canvas.fillStyle = color;
     canvas.fillText("Canvas Breakout", 165, 75);
@@ -35,8 +35,8 @@ function drawScreen(canvas, color){
   }
 }
 
-function displayRules(canvas){
-  clearCanvas(canvas);
+function displayRules(){
+  clearCanvas();
   canvas.font = '22px PressStart';
   canvas.fillStyle = '#fff';
   canvas.fillText("How to Play Canvas Breakout", 50, 75);
@@ -51,19 +51,19 @@ function displayRules(canvas){
 }
 
 // GAME STATE
-function drawPlayer(canvas, ball, bumper){
+function drawPlayer(ball, bumper){
   //Set up ball and bumper
   canvas.fillStyle = "#fff";
-  drawRectangle(canvas, bumper.x, bumper.y, BUMPER_WIDTH, 5);
-  drawCircle(canvas, ball.x, ball.y, BALL_WIDTH);
+  drawRectangle(bumper.x, bumper.y, BUMPER_WIDTH, 5);
+  drawCircle(ball.x, ball.y, BALL_WIDTH);
 }
 
-function reDrawBricks(canvas, bricks){
+function reDrawBricks(){
   for(var i = 0; i < BRICK_ROWS; i++){
     for(var j = 0; j < BRICK_COLUMNS; j++){
       canvas.fillStyle = BRICK_COLORS[j % BRICK_COLUMNS];
       if(bricks[i][j].state == "alive"){
-        drawRectangle(canvas, i * BRICK_WIDTH + i * BRICK_SPACE, j * BRICK_HEIGHT + j * BRICK_SPACE, BRICK_WIDTH, BRICK_HEIGHT);
+        drawRectangle(i * BRICK_WIDTH + i * BRICK_SPACE, j * BRICK_HEIGHT + j * BRICK_SPACE, BRICK_WIDTH, BRICK_HEIGHT);
       }
     }
   }
