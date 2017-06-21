@@ -12,7 +12,7 @@ var BRICK_SPACE = 9;
 var CANVAS_WIDTH = 700;
 var CANVAS_HEIGHT = 475;
 var GAME_LOOP = 40;
-var SCORE_SLOTS = 5;
+var SCORE_SLOTS = 3;
 
 // GLOBAL VARS
 var canvas = null;

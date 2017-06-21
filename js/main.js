@@ -9,12 +9,10 @@ function updateGameState(){
   switch(state){
     case 'initial':
       $('#currentScore').addClass('hidden');
-      setInitialState();
       flashWelcome("Welcome Player One", 140, 250);
       break;
     case 'game':
       clearInterval(effectInterval);
-      $('#currentScore').removeClass('hidden');
       initGame();
       gameInterval = setInterval(gameLoop, GAME_LOOP);
       break;
@@ -25,8 +23,7 @@ function updateGameState(){
       displayRules();
       break;
     case 'paused':
-      $('#currentScore').removeClass('hidden');
-      console.log('on pause');
+      clearInterval(gameInterval);
       break;
     case 'gameover':
       this.state = 'scores';
@@ -35,40 +32,18 @@ function updateGameState(){
   }
 }
 
-function setInitialState(){
+function initGame(){
+  //Initial values
   score = 0;
-  ballspeed = BALL_SPEED;
+  ballspeed = {x: BALL_SPEED.x, y: BALL_SPEED.y};
   locations = {bumper: {x: 325, y: 450}, ball: {x: 340, y: 200}};
   keys = {left: false, right: false};
-}
 
-function alternateColors(){
-  effectInterval = setInterval(function(){
-    var red = Math.floor(Math.random() * 255);
-    var green = Math.floor(Math.random() * 255);
-    var blue = Math.floor(Math.random() * 255);
-    var color ="rgba(" + red + ", " + green + ", " + blue + ", 100)";
-    drawScreen(color);
-  }, 1500);
-}
+  //Set score to 0
+  updateScore(score);
+  $('#currentScore').removeClass('hidden');
 
-function flashWelcome(text, x, y) {
-  var alpha = 1.0;   // full opacity
-  var textInterval = setInterval(function () {
-    clearCanvas();
-    canvas.fillStyle = "rgba(255, 255, 255, " + alpha + ")";
-    canvas.font = "24px 'PressStart'";
-    canvas.fillText(text, x, y);
-    alpha = alpha - 0.06;
-    if (alpha < 0) {
-      clearInterval(textInterval);
-      drawScreen("#fff");
-      alternateColors();
-    }
-  }, 60);
-}
-
-function initGame(){
+  //Draw initial state
   initBricks();
   drawPlayer(locations.ball, locations.bumper);
 }
@@ -90,22 +65,28 @@ $(document).keydown(function(e){
   switch(state) {
     case 'initial':
       switch(e.keyCode){
+        case 13: //Enter key
         case 32: //Spacebar
         case 49: //Number 1
           state = 'game';
           updateGameState();
           break;
-        case 50:
+        case 50: //Number 2
           state = 'scores';
           updateGameState();
           break;
-        case 51:
+        case 51: //Number 3
           state = 'rules';
           updateGameState();
+          break;
       }
-      break
+      break;
     case 'game':
       switch(e.keyCode){
+        case 32: //Spacebar
+          state = 'paused';
+          updateGameState();
+          break;
         case 37: //Left Arrow
           keys.left = true;
           break;
@@ -114,6 +95,13 @@ $(document).keydown(function(e){
           break;
       }
       break;
+    case 'paused':
+      switch(e.keyCode){
+        case 32: //Spacebar
+          state = 'game';
+          gameInterval = setInterval(gameLoop, GAME_LOOP);
+          break;
+      }
     case 'scores':
     case 'rules':
       if(e.keyCode == 13){
@@ -122,13 +110,10 @@ $(document).keydown(function(e){
       }
       break;
   }
-
 });
 
 $(document).keyup(function(e){
   switch(state){
-    case 'initial':
-      break;
     case 'game':
       switch(e.keyCode){
         case 37: //Left Arrow
@@ -139,70 +124,20 @@ $(document).keyup(function(e){
           break;
       }
       break;
-    case 'paused':
-      break;
   }
 });
 
 // GAME LOGIC
 function gameLoop(){
-  //Move stuff
+  //Move the ball by the speed it is going
   locations.ball.x += ballspeed.x;
   locations.ball.y += ballspeed.y;
 
-  if(locations.bumper.x > 0 && keys.left){
-    locations.bumper.x -= BUMPER_SPEED;
-  }
-  else if(locations.bumper.x < CANVAS_WIDTH - BUMPER_WIDTH && keys.right){
-    locations.bumper.x += BUMPER_SPEED;
-  }
-
-  //Detect Collisions
-  //Bumper Collision
-  if(locations.ball.y > locations.bumper.y - BRICK_SPACE && locations.ball.y <= locations.bumper.y){
-    if(locations.ball.x + BALL_WIDTH > locations.bumper.x &&
-      locations.ball.x - BALL_WIDTH < locations.bumper.x + BUMPER_WIDTH){
-      ballspeed.y = -ballspeed.y;
-      if(keys.left){
-        ballspeed.x -= 2;
-      }
-      else if(keys.right){
-        ballspeed.x += 2;
-      }
-    }
-  }
-
-  //Wall Collision
-  if(locations.ball.x < 0 + BALL_WIDTH || locations.ball.x > CANVAS_WIDTH - BALL_WIDTH){
-    ballspeed.x = -ballspeed.x;
-  }
-
-  //Ceiling Collision
-  if(locations.ball.y < 0 + BALL_WIDTH){
-    ballspeed.y = -ballspeed.y;
-  }
-
-  //Detect Fell Off Screen
-  if(locations.ball.y > CANVAS_HEIGHT || noBricksAlive()){
-    state = 'gameover';
-    clearInterval(gameInterval);
-    updateGameState();
-  }
-
-  //Brick Collision
-  for(var i = 0; i < bricks.length; i++){
-    for(var j = 0; j < bricks[i].length; j++){
-      if(hasOverlap(bricks[i][j], locations.ball)){
-        score = collideBrick(i, j, ballspeed, score);
-        break;
-      }
-    }
-  }
+  //Perform Collision Detections
+  detectCollisions();
 
   //wipe and redraw stuff
   clearCanvas();
   drawPlayer(locations.ball, locations.bumper);
-
-  //Redraw bricks
   reDrawBricks();
 }

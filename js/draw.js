@@ -50,7 +50,7 @@ function displayRules(){
   canvas.fillText("Press enter to return", 165, 450);
 }
 
-// GAME STATE
+//UPDATING GAME STATE
 function drawPlayer(ball, bumper){
   //Set up ball and bumper
   canvas.fillStyle = "#fff";
@@ -71,4 +71,31 @@ function reDrawBricks(){
 
 function updateScore(newScore){
   $('#currentScoreDisplay').empty().append(newScore);
+}
+
+//INITIAL STATE FLASHING TEXT
+function alternateColors(){
+  effectInterval = setInterval(function(){
+    var red = Math.floor(Math.random() * 255);
+    var green = Math.floor(Math.random() * 255);
+    var blue = Math.floor(Math.random() * 255);
+    var color ="rgba(" + red + ", " + green + ", " + blue + ", 100)";
+    drawScreen(color);
+  }, 1500);
+}
+
+function flashWelcome(text, x, y) {
+  var alpha = 1.0;   // full opacity
+  var textInterval = setInterval(function () {
+    clearCanvas();
+    canvas.fillStyle = "rgba(255, 255, 255, " + alpha + ")";
+    canvas.font = "24px 'PressStart'";
+    canvas.fillText(text, x, y);
+    alpha = alpha - 0.06;
+    if (alpha < 0) {
+      clearInterval(textInterval);
+      drawScreen("#fff");
+      alternateColors();
+    }
+  }, 60);
 }

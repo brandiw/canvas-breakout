@@ -1,4 +1,55 @@
 // COLLISION DETECTION
+function detectCollisions(){
+  //Don't let the bumper go off the screen
+  if(locations.bumper.x > 0 && keys.left){
+    locations.bumper.x -= BUMPER_SPEED;
+  }
+  else if(locations.bumper.x < CANVAS_WIDTH - BUMPER_WIDTH && keys.right){
+    locations.bumper.x += BUMPER_SPEED;
+  }
+
+  //Bumper Collision with Ball
+  if(locations.ball.y > locations.bumper.y - BRICK_SPACE && locations.ball.y <= locations.bumper.y){
+    if(locations.ball.x + BALL_WIDTH > locations.bumper.x &&
+      locations.ball.x - BALL_WIDTH < locations.bumper.x + BUMPER_WIDTH){
+      ballspeed.y = -ballspeed.y;
+      if(keys.left){
+        ballspeed.x -= 2;
+      }
+      else if(keys.right){
+        ballspeed.x += 2;
+      }
+    }
+  }
+
+  //Wall Collision
+  if(locations.ball.x < 0 + BALL_WIDTH || locations.ball.x > CANVAS_WIDTH - BALL_WIDTH){
+    ballspeed.x = -ballspeed.x;
+  }
+
+  //Ceiling Collision
+  if(locations.ball.y < 0 + BALL_WIDTH){
+    ballspeed.y = -ballspeed.y;
+  }
+
+  //Detect Ball Fell Off Screen (bottom)
+  if(locations.ball.y > CANVAS_HEIGHT || noBricksAlive()){
+    state = 'gameover';
+    clearInterval(gameInterval);
+    updateGameState();
+  }
+
+  //Brick Collision
+  for(var i = 0; i < bricks.length; i++){
+    for(var j = 0; j < bricks[i].length; j++){
+      if(hasOverlap(bricks[i][j], locations.ball)){
+        score = collideBrick(i, j, ballspeed, score);
+        break;
+      }
+    }
+  }
+}
+
 function hasOverlap(brick, ball){
   if(brick.state == "alive"){
     if(brick.y + BRICK_HEIGHT >= ball.y && brick.y <= ball.y ||
